@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bright School Lost & Found - Find What You've Lost</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-search"></i>
+                <span>Bright School Lost & Found</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#report" class="nav-link">Report Item</a></li>
+                <li><a href="#search" class="nav-link">Search Items</a></li>
+                <li><a href="#matches" class="nav-link">Matches</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li class="nav-notification">
+                <a href="#matches" class="nav-link">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">0</span>
+                </a>
+            </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Notification Banner -->
+    <div id="notificationBanner" class="notification-banner">
+        <div class="notification-content">
+            <span id="notificationMessage"></span>
+            <button class="btn btn-small" onclick="this.parentElement.style.display='none'">×</button>
+        </div>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Lost Something?<br>Found Something?</h1>
+                <p>Help reunite lost items with their owners in our Bright School community</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="showSection('report')">
+                        <i class="fas fa-plus"></i> Report Item
+                    </button>
+                    <button class="btn btn-secondary" onclick="showSection('search')">
+                        <i class="fas fa-search"></i> Search Items
+                    </button>
+                </div>
+                
+                <!-- Visual Items Gallery -->
+                <div class="items-gallery">
+                    <h3>Common Lost & Found Items</h3>
+                    <div class="items-grid">
+                        <div class="item-icon">
+                            <i class="fas fa-book"></i>
+                            <span>Textbooks</span>
+                        </div>
+                        <div class="item-icon">
+                            <i class="fas fa-id-card"></i>
+                            <span>Student ID</span>
+                        </div>
+                        <div class="item-icon">
+                            <i class="fas fa-tshirt"></i>
+                            <span>Clothing</span>
+                        </div>
+                        <div class="item-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Electronics</span>
+                        </div>
+                        <div class="item-icon">
+                            <i class="fas fa-key"></i>
+                            <span>Keys</span>
+                        </div>
+                        <div class="item-icon">
+                            <i class="fas fa-futbol"></i>
+                            <span>Sports Gear</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Report Item Section -->
+        <section id="report" class="section">
+            <div class="container">
+                <h2>Report a Lost or Found Item</h2>
+                <div class="report-tabs">
+                    <button class="tab-btn active" onclick="switchTab('lost')">Lost Item</button>
+                    <button class="tab-btn" onclick="switchTab('found')">Found Item</button>
+                </div>
+                
+                <form id="reportForm" class="report-form">
+                    <!-- First Row -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="itemType">Item Type</label>
+                            <select id="itemType" name="itemType" required>
+                                <option value="">Select item type</option>
+                                <option value="books">Books/Textbooks</option>
+                                <option value="student-id">Student ID Card</option>
+                                <option value="national-id">National ID/Documents</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="clothing">Clothing</option>
+                                <option value="jewelry">Jewelry</option>
+                                <option value="keys">Keys</option>
+                                <option value="wallet">Wallet/Purse</option>
+                                <option value="stationery">Stationery/School Supplies</option>
+                                <option value="sports-equipment">Sports Equipment</option>
+                                <option value="lunch-box">Lunch Box/Water Bottle</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="itemName">Item Name</label>
+                            <input type="text" id="itemName" name="itemName" placeholder="e.g., Math Textbook, Blue backpack" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" name="location" placeholder="Where was it lost/found?" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date">Date</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+                    </div>
+
+                    <!-- Second Row -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="description">Detailed Description</label>
+                            <textarea id="description" name="description" placeholder="Provide more details about the item..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactName">Your Name</label>
+                            <input type="text" id="contactName" name="contactName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactEmail">Email</label>
+                            <input type="email" id="contactEmail" name="contactEmail" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactPhone">Phone</label>
+                            <input type="tel" id="contactPhone" name="contactPhone">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit Report
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Search Items Section -->
+        <section id="search" class="section">
+            <div class="container">
+                <h2>Search Lost & Found Items</h2>
+                
+                <div class="search-filters">
+                    <div class="filter-group">
+                        <input type="text" id="searchQuery" placeholder="Search by item name or description...">
+                        <button class="btn btn-primary" onclick="searchItems()">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                    
+                    <div class="filter-row">
+                        <select id="filterType">
+                            <option value="">All Types</option>
+                            <option value="book">Books/Textbooks</option>
+                            <option value="student-id">Student ID Card</option>
+                            <option value="national-id">National ID/Documents</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="keys">Keys</option>
+                            <option value="wallet">Wallet/Purse</option>
+                            <option value="other">Other</option>
+                        </select>
+                        
+                        <select id="filterStatus">
+                            <option value="">All Items</option>
+                            <option value="lost">Lost Items</option>
+                            <option value="found">Found Items</option>
+                        </select>
+                        
+                        <input type="date" id="filterDate" placeholder="Date">
+                    </div>
+                </div>
+                
+                <div id="searchResults" class="search-results">
+                    <!-- Search results will be displayed here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Matches Section -->
+        <section id="matches" class="section">
+            <div class="container">
+                <h2>Potential Matches</h2>
+                <p class="section-subtitle">These items might be matches between lost and found reports.</p>
+                
+                <div class="filters">
+                    <div class="form-group">
+                        <label for="matchType">Filter by Item Type:</label>
+                        <select id="matchType" class="form-control">
+                            <option value="">All Types</option>
+                            <option value="student-id">Student ID</option>
+                            <option value="national-id">National ID</option>
+                            <option value="books">Books</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="findPotentialMatches()">
+                        <i class="fas fa-sync-alt"></i> Refresh Matches
+                    </button>
+                </div>
+                
+                <div id="matchesContainer" class="matches-container">
+                    <!-- Matches will be displayed here -->
+                    <div class="no-matches">
+                        <i class="fas fa-search"></i>
+                        <p>No potential matches found. Click "Refresh Matches" to search again.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <div class="container">
+                <h2>Contact Us</h2>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>lostandfound@brightschool.edu</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+254 707 141 003</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Main Office, Bright School Administration Building</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Bright School Lost & Found Community. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
