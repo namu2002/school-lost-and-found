@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const LostItem = require('../models/LostItem');
-const auth = require('./authRoutes');
+const auth = require('../authRoutes');
 
 // GET all lost items
 router.get('/', async (req, res) => {
