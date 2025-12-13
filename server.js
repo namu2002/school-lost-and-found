@@ -27,8 +27,8 @@ app.use('/api/lostitems', lostItemRoutes);
 app.use('/api/founditems', foundItemRoutes);
 
 // Catch-all route for frontend (Express 5 compatible)
-app.get('/:any(*)', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start server

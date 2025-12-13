@@ -4,8 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Lost & Found</title>
+
+    <!-- Admin protection -->
+    <script>
+        if (localStorage.getItem('isAdmin') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <!-- Fonts & Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         * {
             margin: 0;
@@ -36,20 +46,35 @@
             font-size: 2em;
         }
 
-        .logout-btn {
-            background: #e63946;
-            color: white;
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-header {
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 1em;
             transition: all 0.3s;
+            color: white;
         }
 
-        .logout-btn:hover {
+        .btn-home {
+            background: #457b9d;
+        }
+
+        .btn-home:hover {
+            background: #2c5282;
+        }
+
+        .btn-logout {
+            background: #e63946;
+        }
+
+        .btn-logout:hover {
             background: #d62828;
-            transform: scale(1.05);
         }
 
         .admin-container {
@@ -70,11 +95,6 @@
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
         }
 
         .stat-card i {
@@ -86,12 +106,6 @@
         .stat-card h3 {
             font-size: 2.5em;
             color: #333;
-            margin: 10px 0;
-        }
-
-        .stat-card p {
-            color: #666;
-            font-size: 1.1em;
         }
 
         .section {
@@ -105,90 +119,8 @@
         .section h2 {
             color: #667eea;
             margin-bottom: 20px;
-            padding-bottom: 15px;
             border-bottom: 3px solid #667eea;
-            font-size: 1.8em;
-        }
-
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th {
-            background: #667eea;
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            border: none;
-        }
-
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        tr:hover {
-            background: #f8f9fa;
-        }
-
-        .action-btns {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: all 0.3s;
-        }
-
-        .btn-delete {
-            background: #e63946;
-            color: white;
-        }
-
-        .btn-delete:hover {
-            background: #d62828;
-            transform: scale(1.05);
-        }
-
-        .btn-view {
-            background: #457b9d;
-            color: white;
-        }
-
-        .btn-view:hover {
-            background: #2c5282;
-            transform: scale(1.05);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-        }
-
-        .empty-state i {
-            font-size: 4em;
-            color: #ddd;
-            margin-bottom: 15px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 1.2em;
-            color: #667eea;
+            padding-bottom: 10px;
         }
 
         .filter-group {
@@ -198,68 +130,47 @@
             flex-wrap: wrap;
         }
 
-        .filter-group input,
-        .filter-group select {
-            padding: 10px 15px;
-            border: 1px solid #ddd;
+        .filter-group input {
+            padding: 10px;
             border-radius: 5px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1em;
+            border: 1px solid #ddd;
         }
 
         .filter-group button {
             padding: 10px 20px;
-            background: #667eea;
-            color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1em;
+            background: #667eea;
+            color: white;
         }
 
-        .filter-group button:hover {
-            background: #5568d3;
-            transform: scale(1.05);
-        }
-
-        @media (max-width: 768px) {
-            .admin-header {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .stats-container {
-                grid-template-columns: 1fr;
-            }
-
-            table {
-                font-size: 0.9em;
-            }
-
-            th, td {
-                padding: 8px;
-            }
-
-            .action-btns {
-                flex-direction: column;
-            }
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #667eea;
         }
     </style>
 </head>
+
 <body>
 
 <div class="admin-container">
+
+    <!-- Header -->
     <div class="admin-header">
         <div>
             <h1><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h1>
-            <p style="color: #666; margin-top: 5px;">Manage all lost and found items</p>
+            <p style="color:#666;">Manage all lost and found items</p>
         </div>
-        <button class="logout-btn" onclick="goHome()">← Back to Home</button>
+
+        <div class="header-actions">
+            <button class="btn-header btn-home" onclick="goHome()">Home</button>
+            <button class="btn-header btn-logout" onclick="logout()">Logout</button>
+        </div>
     </div>
 
-    <!-- Statistics Cards -->
+    <!-- Stats -->
     <div class="stats-container">
         <div class="stat-card">
             <i class="fas fa-question-circle"></i>
@@ -278,33 +189,43 @@
         </div>
     </div>
 
-    <!-- Lost Items Section -->
+    <!-- Lost Items -->
     <div class="section">
         <h2><i class="fas fa-search"></i> Lost Items</h2>
         <div class="filter-group">
-            <input type="text" id="lostSearch" placeholder="Search lost items...">
+            <input type="text" id="lostSearch" placeholder="Search lost items">
             <button onclick="filterLostItems()">Search</button>
-            <button onclick="loadLostItems()" style="background: #06a77d;">Refresh</button>
+            <button onclick="loadLostItems()">Refresh</button>
         </div>
-        <div class="table-container" id="lostContainer">
-            <div class="loading">Loading lost items...</div>
-        </div>
+        <div id="lostContainer" class="loading">Loading lost items...</div>
     </div>
 
-    <!-- Found Items Section -->
+    <!-- Found Items -->
     <div class="section">
         <h2><i class="fas fa-gift"></i> Found Items</h2>
         <div class="filter-group">
-            <input type="text" id="foundSearch" placeholder="Search found items...">
+            <input type="text" id="foundSearch" placeholder="Search found items">
             <button onclick="filterFoundItems()">Search</button>
-            <button onclick="loadFoundItems()" style="background: #06a77d;">Refresh</button>
+            <button onclick="loadFoundItems()">Refresh</button>
         </div>
-        <div class="table-container" id="foundContainer">
-            <div class="loading">Loading found items...</div>
-        </div>
+        <div id="foundContainer" class="loading">Loading found items...</div>
     </div>
+
 </div>
 
+<!-- Page logic -->
+<script>
+    function logout() {
+        localStorage.removeItem('isAdmin');
+        window.location.href = 'login.html';
+    }
+
+    function goHome() {
+        window.location.href = 'index.html';
+    }
+</script>
+
 <script src="admin.js"></script>
+
 </body>
 </html>
