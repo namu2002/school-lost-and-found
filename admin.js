@@ -210,9 +210,6 @@ function updateTotalCount() {
         Number(lostCountEl.textContent) + Number(foundCountEl.textContent);
 }
 
-// ===============================
-// INIT
-// ===============================
 document.addEventListener('DOMContentLoaded', () => {
     loadLostItems();
     loadFoundItems();
