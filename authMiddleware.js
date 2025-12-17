@@ -1,20 +1,17 @@
-// middleware/authMiddleware.js
+// middleware/authMiddleware.js (FULL CODE)
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
+// 1. Authentication Middleware (Checks for valid token and fetches user)
 const protect = async (req, res, next) => {
     let token;
 
-    // Check for the token in the 'Authorization' header (standard JWT practice)
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
-            // Get token from header (removes 'Bearer ')
             token = req.headers.authorization.split(' ')[1];
-
-            // Verify token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-            // Attach user object to the request (excluding password)
+            
+            // Fetch user data EXCEPT the password
             req.user = await User.findById(decoded.id).select('-password');
 
             if (!req.user) {
@@ -33,4 +30,17 @@ const protect = async (req, res, next) => {
     }
 };
 
-module.exports = { protect };
+// 2. Authorization Middleware (Checks if the authenticated user is an Admin)
+const adminOnly = (req, res, next) => {
+    // Check if the user exists and their role is 'admin' (based on your user schema)
+    if (req.user && req.user.role === 'admin') {
+        next();
+    } else {
+        // Forbidden status
+        res.status(403).json({ 
+            message: 'Access denied. You must be an administrator to view this resource.' 
+        });
+    }
+};
+
+module.exports = { protect, adminOnly };
