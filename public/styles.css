@@ -154,7 +154,7 @@ body {
 }
 
 .hero {
-    background: transparent
+    background: transparent;
     color: #000;
     padding: 180px 0 100px;
     text-align: center;
@@ -347,7 +347,7 @@ body {
 .section {
     padding: 80px 0;
     display: none;
-    background: transparent
+    background: transparent;
     color: #333;
 }
 
