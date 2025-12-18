@@ -1,12 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const LostItem = require('../models/LostItem'); // reuse the same schema, status changes to found
-const auth = require('./authRoutes');
+// CORRECTED: Filename is 'lostitem.js' (lowercase) but we can name the variable as we wish.
+// Note: You should consider having a single 'item.js' model instead of reusing 'lostitem'.
+const LostItem = require('../models/lostitem');
+const { protect } = require('../middleware/authMiddleware'); // CORRECTED: Import 'protect' from middleware
 
 // GET all found items
 router.get('/', async (req, res) => {
     try {
-        const items = await LostItem.find({ status: 'found' }); // only found items
+        // This correctly finds items from the collection that have a status of 'found'.
+        const items = await LostItem.find({ status: 'found' });
         res.json(items);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -14,7 +17,8 @@ router.get('/', async (req, res) => {
 });
 
 // POST a found item (authenticated users only)
-router.post('/', auth.authenticate, async (req, res) => {
+// CORRECTED: Replaced 'auth.authenticate' with 'protect'
+router.post('/', protect, async (req, res) => {
     const item = new LostItem({
         type: req.body.type,
         itemName: req.body.itemName,
@@ -24,7 +28,7 @@ router.post('/', auth.authenticate, async (req, res) => {
         contactName: req.body.contactName || '',
         contactEmail: req.body.contactEmail || '',
         contactPhone: req.body.contactPhone || '',
-        status: 'found'                    // forced found status
+        status: 'found' // forced found status
     });
 
     try {
@@ -36,8 +40,10 @@ router.post('/', auth.authenticate, async (req, res) => {
 });
 
 // DELETE a found item by ID (admin or security only)
-router.delete('/:id', auth.authenticate, async (req, res) => {
+// CORRECTED: Replaced 'auth.authenticate' with 'protect'
+router.delete('/:id', protect, async (req, res) => {
     try {
+        // The 'protect' middleware adds the 'req.user' object for this check.
         if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'security')) {
             return res.status(403).json({ message: 'Forbidden: insufficient privileges' });
         }

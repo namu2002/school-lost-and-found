@@ -1,46 +1,52 @@
 // --- IMPORTS ---
-require('dotenv').config({ path: require('path').resolve(__dirname, '..', '.env') }); // Robustly find .env
+const path = require('path');
+// CORRECTED: Simplified dotenv configuration. It looks for .env in the root by default.
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
-const connectDB = require('../db'); // Correct path to db.js
+const connectDB = require('./db'); // CORRECTED: Path to db.js (inside server folder)
 
 // --- ROUTE IMPORTS ---
-// Assuming your 'Routes' folder is inside the 'server' folder
 const lostItemRoutes = require('./routes/lostitemroutes');
 const foundItemRoutes = require('./routes/founditemroutes');
-const authRoutes = require('./routes/authRoutes'); // Added this back in
+const authRoutes = require('./routes/authRoutes');
 
 // --- APP INITIALIZATION ---
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // --- DATABASE CONNECTION ---
-// Assuming connectDB is an async function
+// This function will connect to the database using the MONGO_URI from your .env file.
 connectDB();
 
-// --- MIDDLEWARE ---
+// --- CORE MIDDLEWARE ---
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// --- STATIC FILE SERVER ---
-// **THIS IS THE FIX**: Go UP one level '..' to find the 'public' folder.
-app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(express.json()); // Used to parse JSON bodies
+app.use(express.urlencoded({ extended: false })); // Used to parse URL-encoded bodies
 
 // --- API ROUTES ---
+// All API calls will be prefixed with /api
 app.use('/api/lost-items', lostItemRoutes);
 app.use('/api/found-items', foundItemRoutes);
-app.use('/api/auth', authRoutes); // Added this back in
+app.use('/api/auth', authRoutes);
 
-// --- FRONT-END CATCH-ALL ROUTE ---
-// **THIS IS THE FIX**: Go UP one level '..' to find the 'public' folder.
-// This route sends index.html for any non-API request.
+// --- FRONT-END INTEGRATION (IMPORTANT) ---
+// This section serves the static files (like HTML, CSS, JS) from a 'public' or 'build' folder.
+// This should come AFTER your API routes.
+
+// Set static folder. The path goes up one level from 'server' to the root, then into 'public'.
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
+// This "catch-all" route directs any request that is NOT an API call to your main HTML page.
+// This is what allows a Single Page Application (like React) to handle its own routing.
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+  res.sendFile(path.resolve(__dirname, '..', 'public', 'index.html'));
 });
+
 
 // --- START SERVER ---
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    // This message confirms the server has started successfully.
+    console.log(`🚀 Server is running on port ${PORT}`);
 });

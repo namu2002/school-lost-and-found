@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const LostItem = require('../models/LostItem');
-const auth = require('../authRoutes');
+const LostItem = require('../models/lostitem'); // CORRECTED: Lowercase 'l' to match filename
+const { protect } = require('../middleware/authMiddleware'); // CORRECTED: Import 'protect' from middleware
 
 // GET all lost items
 router.get('/', async (req, res) => {
@@ -14,17 +14,18 @@ router.get('/', async (req, res) => {
 });
 
 // POST a lost item (authenticated users only)
-router.post('/', auth.authenticate, async (req, res) => {
+// CORRECTED: Replaced 'auth.authenticate' with 'protect'
+router.post('/', protect, async (req, res) => { 
     const item = new LostItem({
         type: req.body.type,
-        itemName: req.body.itemName,      // matches schema
-        location: req.body.location,      // matches schema
-        date: req.body.date,              // matches schema
+        itemName: req.body.itemName,
+        location: req.body.location,
+        date: req.body.date,
         description: req.body.description || '',
         contactName: req.body.contactName || '',
         contactEmail: req.body.contactEmail || '',
         contactPhone: req.body.contactPhone || '',
-        status: 'lost'                    // forced lost status
+        status: 'lost'
     });
 
     try {
@@ -36,9 +37,11 @@ router.post('/', auth.authenticate, async (req, res) => {
 });
 
 // DELETE a lost item by ID (admin or security only)
-router.delete('/:id', auth.authenticate, async (req, res) => {
+// CORRECTED: Replaced 'auth.authenticate' with 'protect'
+router.delete('/:id', protect, async (req, res) => { 
     try {
-        // Only admin or security staff can delete items
+        // This logic checks the user's role AFTER the 'protect' middleware confirms they are logged in.
+        // req.user is added by the 'protect' middleware.
         if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'security')) {
             return res.status(403).json({ message: 'Forbidden: insufficient privileges' });
         }

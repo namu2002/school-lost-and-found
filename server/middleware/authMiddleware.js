@@ -1,20 +1,17 @@
-// middleware/authMiddleware.js
+// middleware/authMiddleware.js (FULL CODE)
 const jwt = require('jsonwebtoken');
-const User = require('../../../school-lost-and-found/server/models/user');
+const User = require('../models/user');
 
+// 1. Authentication Middleware (Checks for valid token and fetches user)
 const protect = async (req, res, next) => {
     let token;
 
-    // Check for the token in the 'Authorization' header (standard JWT practice)
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
-            // Get token from header (removes 'Bearer ')
             token = req.headers.authorization.split(' ')[1];
-
-            // Verify token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-            // Attach user object to the request (excluding password)
+            
+            // Fetch user data EXCEPT the password
             req.user = await User.findById(decoded.id).select('-password');
 
             if (!req.user) {
@@ -32,28 +29,18 @@ const protect = async (req, res, next) => {
         return res.status(401).json({ message: 'Not authorized, no token.' });
     }
 };
-// NEW: Authorization Middleware for Admin access
+
+// 2. Authorization Middleware (Checks if the authenticated user is an Admin)
 const adminOnly = (req, res, next) => {
+    // Check if the user exists and their role is 'admin' (based on your user schema)
     if (req.user && req.user.role === 'admin') {
-        next(); 
+        next();
     } else {
+        // Forbidden status
         res.status(403).json({ 
-            message: 'Access denied. Administrator privileges required.' 
+            message: 'Access denied. You must be an administrator to view this resource.' 
         });
     }
 };
 
-// NEW: Authorization Middleware for Admin OR Security access
-const adminOrSecurity = (req, res, next) => {
-    if (req.user && (req.user.role === 'admin' || req.user.role === 'security')) {
-        next(); 
-    } else {
-        res.status(403).json({ 
-            message: 'Access denied. Admin or Security privileges required.' 
-        });
-    }
-};
-
-
-// Export all required middleware
-module.exports = { protect, adminOnly, adminOrSecurity };
+module.exports = { protect, adminOnly };
