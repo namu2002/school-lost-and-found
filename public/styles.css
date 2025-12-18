@@ -9,7 +9,12 @@ body {
     font-family: 'Poppins', sans-serif;
     line-height: 1.6;
     color: #333;
-    background-color: #fff9fb; 
+    background-image: url('images/bright-school.JPEG');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-color: #fff9fb;
 }
 
 .container {
@@ -149,7 +154,7 @@ body {
 }
 
 .hero {
-    background: linear-gradient(135deg, #e750a0 0%, #e777ad 50%, #e7699f 100%);
+    background: transparent
     color: #000;
     padding: 180px 0 100px;
     text-align: center;
@@ -342,7 +347,7 @@ body {
 .section {
     padding: 80px 0;
     display: none;
-    background: #fff9fb; 
+    background: transparent
     color: #333;
 }
 
@@ -360,7 +365,7 @@ body {
 }
 
 #report {
-    background: linear-gradient(135deg, #fff5f9 0%, #ffebf3 50%, #ffe1ed 100%);
+    background: transparent;
     padding: 80px 0;
 }
 
