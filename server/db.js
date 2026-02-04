@@ -7,7 +7,9 @@ const connectDB = async () => {
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
         console.error(`Error connecting to MongoDB: ${error.message}`);
-        process.exit(1); // Exit process with failure
+        // Do not exit the process here so the API can still run in development
+        // when a MongoDB URI is not available or unreachable.
+        return null;
     }
 };
 
